@@ -4,13 +4,11 @@ import maya.OpenMayaUI as omui
 from maya.api import OpenMaya as om2
 
 from keychain.api import canvas, group, timeline
-from keychain.api.utils import callbacks, curves, maya_qt
+from keychain.api.utils import maya_qt
 
 from keychain.scripts.archer import constants, api, draw_context, pose_draw_context
 from keychain.scripts.archer.ui import widget
 
-reload(callbacks)
-reload(curves)
 reload(maya_qt)
 reload(widget)
 reload(canvas)

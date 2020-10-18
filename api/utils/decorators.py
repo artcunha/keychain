@@ -1,33 +1,6 @@
-"""
-General decorators for Maya
-"""
 import functools
 
 import maya.cmds as cmds
-
-def ensure_unique_window(name):
-    """
-    Ensure that existing windows are destroyed before a new one is craeted.
-    """
-
-    def decorator(func):
-        @functools.wraps(func)
-        def wrapper(*args, **kwargs):
-            if cmds.window(name, exists=True):
-                cmds.deleteUI(name)
-
-            wsname = name + "WorkspaceControl"
-            if cmds.workspaceControl(wsname, ex=True):
-                if cmds.workspaceControlState(wsname, ex=True):
-                    cmds.workspaceControlState(wsname, remove=True)
-                cmds.deleteUI(wsname)
-
-            return func(*args, **kwargs)
-
-        return wrapper
-
-    return decorator
-
 
 def ensure_maya_initialized(func):
     """

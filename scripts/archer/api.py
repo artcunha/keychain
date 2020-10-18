@@ -53,7 +53,7 @@ def get_points_along_curve(fn_curve, samples=2):
     points = []
     for i in xrange(samples):
         percent = float(i)/(samples-1) if not samples == 1 else 0
-        point = get_point_at_length(fn_curve.length() * percent)
+        point = get_point_at_length(fn_curve, length=fn_curve.length()*percent)
         points.append(point)
     return points
 
@@ -68,6 +68,11 @@ def get_orient_along_curve(fn_curve, samples=2, rotate_order=om.MEulerRotation.k
     quaternion = om.MQuaternion()
     script_util = om.MScriptUtil()
 
+    ## Get camera vector
+    cam_matrix = get_active_camera_matrix()
+    # Get position data from the matrix
+    cam_point = om.MPoint(cam_matrix(3,0), cam_matrix(3,1), cam_matrix(3,2),)
+
     for i in xrange(samples):
         percent = float(i)/(samples-1) if not samples == 1 else 0
         parameter = fn_curve.findParamFromLength(fn_curve.length() * percent)
@@ -75,6 +80,15 @@ def get_orient_along_curve(fn_curve, samples=2, rotate_order=om.MEulerRotation.k
         tangent = fn_curve.tangent(parameter).normal()
         tangents_list.insert(i, tangent)
         
+        
+        ## Get camera vector
+        crv_point = om.MPoint()
+        fn_curve.getPointAtParam(parameter, crv_point)
+        camera_aim = om.MVector(crv_point-cam_point).normal()
+        ##
+
+        temp_normal = camera_aim
+
         # Parallel Transport to calculate better normals
         if i == 0:
             # Use the temp_normal to get one ortogonal vector to the tangent
@@ -123,4 +137,3 @@ def get_active_camera_matrix():
     view.getCamera(cam)
     return cam.inclusiveMatrix()
 
-def get_vector_from_matrix

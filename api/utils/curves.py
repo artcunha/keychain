@@ -3,10 +3,6 @@ import maya.mel
 import maya.OpenMaya as om
 import maya.api.OpenMaya as om2
 import maya.OpenMayaUI as omui
-import pymel.core as pm
-
-from pose_sketch import constants
-from pose_sketch.utils import transforms
 
 def create_curve_from_positions(name, positions_list):
     # Calculate curve degrees
@@ -90,33 +86,6 @@ def jc_closestPointOnCurve(location, curveObject):
 def rebuild_curve(curve, spans):
     cmds.rebuildCurve(curve, rebuildType=0, degree=1, spans=spans)
     return curve
-
-
-def draw_nurbs_context():
-    # Launch the PencilCurveTool
-    maya.mel.eval("curveSketchToolScript 4")
-    # cmds.setToolTo("pencilContext")
-
-
-def connect_curves(output_curve, input_curve):
-
-    # if not cmds.getAttr()
-    degrees = cmds.getAttr("{}.degree".format(input_curve))
-    spans = cmds.getAttr("{}.spans".format(input_curve))
-
-    cmds.rebuildCurve(output_curve, rebuildType=0, degree=degrees, spans=spans)
-
-    history = cmds.listHistory(input_curve)
-    old_nodes = cmds.ls(history, type="blendShape")
-    if old_nodes:
-        cmds.delete(old_nodes)
-
-    bs_node = cmds.blendShape(
-        output_curve, input_curve, name=constants.BLENDSHAPE_NODE
-    )[0]
-
-    cmds.setAttr("{}.{}".format(bs_node, output_curve), 1)
-
 
 def get_cvs_number(curve):
     """
@@ -227,18 +196,6 @@ def align_to_curve(crv=None, obj=None, param=None, destructive=True):
     # cmds.delete(tempObj, poci, decomp, matrix)
 
 
-def create_point_on_curve(curve, count):
-    locators = []
-
-    for i, parameter in enumerate(split_curve_to_parameter(curve, count)):
-        # create follicle
-        locator = cmds.spaceLocator(name=constants.LOCATOR_NAME.format(parameter))[0]
-        align_to_curve(crv=curve, obj=locator, param=parameter)
-        locators.append(locator)
-
-    return locators
-
-
 def create_locators_on_curve(curve, count, destructive=False):
     """
     Overview:
@@ -298,7 +255,7 @@ def create_locators_on_curve(curve, count, destructive=False):
         ]
 
         # Create a locator, substituting the position rotation information
-        locator = cmds.spaceLocator(name=constants.LOCATOR_NAME.format(i))[0]
+        locator = cmds.spaceLocator()[0]
         cmds.xform(locator, matrix=worldMatrix)
         locList.append(locator)
 
