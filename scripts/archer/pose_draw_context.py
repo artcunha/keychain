@@ -1,7 +1,7 @@
 
 import maya.cmds as cmds
 import maya.mel
-import maya.OpenMaya as om
+import maya.api.OpenMaya as om2
 
 import math
 
@@ -38,6 +38,8 @@ class PoseDrawContext(abstract_drag.AbstractContextDragger):
         steps = len(self.nodes)
         if not steps == 1:
             cmds.smoothCurve("{}.cv[*]".format(self.curve), s=100)
+            cmds.smoothCurve("{}.cv[*]".format(self.curve), s=100)
+            cmds.smoothCurve("{}.cv[*]".format(self.curve), s=100)
 
         dag = maya_api_utils.get_dag_path(self.curve)
         dag.extendToShape()
@@ -72,15 +74,42 @@ class PoseDrawContext(abstract_drag.AbstractContextDragger):
             rotation_list = api.get_orient_along_curve(self.fn_curve, samples=steps, rotate_order=rotate_order)
             for i, rotation in enumerate(rotation_list):
                 rotation_degrees = [math.degrees(axis) for axis in (rotation.x, rotation.y, rotation.z)]
-                cmds.xform(self.nodes[i], rotation=rotation_degrees)
-                
+                # cmds.xform(self.nodes[i], rotation=rotation_degrees)
+
                 # Debug
                 cmds.xform(locs[i], rotation=rotation_degrees)
+
+                cmds.setAttr("{}.localScaleX".format(locs[i][0]), 0.1)
+                cmds.setAttr("{}.localScaleY".format(locs[i][0]), 0.1)
+                cmds.setAttr("{}.localScaleZ".format(locs[i][0]), 0.1)
+                
+                # Testy
+                cmds.xform(self.nodes[i], rotation=[0,0,0])
+                cmds.parent(locs[i], self.nodes[i])
+                loc_rot = cmds.xform(locs[i], q=True, rotation=True, os=True)
+                print loc_rot
+                cmds.parent(locs[i], world=True)
+                print self.nodes[i]
+                cmds.xform(self.nodes[i], rotation=loc_rot)
+                cmds.delete(locs[i])
+
+
+                # loc_mat = om2.MMatrix(cmds.xform(locs[i], q=True,ws=True, matrix=True))
+
+                # inverse_mat = om2.MMatrix(cmds.xform(self.nodes[i], q=True,ws=True, matrix=True)).inverse()
+
+                # final_mat = om2.MTransformationMatrix(loc_mat*inverse_mat)
+                # rotation = final_mat.rotation()
+
+                # rotation_degrees = [math.degrees(axis) for axis in (rotation.x, rotation.y, rotation.z)]
+                # cmds.xform(self.nodes[i], rotation=rotation_degrees)
+
+
 
                 # 
 
                 
-        # self.delete_curve()
+        self.delete_curve()
         # Go to the last frame
         cmds.select(self.nodes)
         

@@ -119,9 +119,9 @@ def get_orient_along_curve(fn_curve, samples=2, rotate_order=om.MEulerRotation.k
         binormal.normalize()
         
         matrix = matrix_utils.build_matrix(
-            x=(normal.x,normal.y,normal.z),
-            y=(tangent.x,tangent.y,tangent.z),
-            z=(binormal.x,binormal.y,binormal.z),
+            x=(tangent.x,tangent.y,tangent.z),
+            y=(binormal.x,binormal.y,binormal.z),
+            z=(normal.x,normal.y,normal.z),
         )
 
         transform = om.MTransformationMatrix(matrix)
