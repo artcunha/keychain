@@ -1,0 +1,19 @@
+
+{ 
+    "properties":{
+        "blend":{
+            "name":"Blend",
+            "type":"float",
+            "default":1,
+            "minimum":0,
+            "maximum":1
+        },
+        "smooth_curve":{
+            "name":"Smooth Curve",
+            "type":"int",
+            "default":100,
+            "minimum":0,
+            "maximum":40
+        }
+    }
+}

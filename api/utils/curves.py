@@ -1,3 +1,5 @@
+
+import math
 import maya.cmds as cmds
 import maya.mel
 import maya.OpenMaya as om
@@ -14,19 +16,94 @@ def create_curve_from_positions(name, positions_list):
     return cmds.curve(name=name, degree=degree, point=positions_list, ws=True)
 
 
-def create_curve(name, controls):
-    cv_positions = [
-        cmds.xform(transform, q=True, t=True, ws=True) for transform in controls
-    ]
-    curve = cmds.curve(degree=1, point=cv_positions, name=name)
-
-    # Rename shapes
-    for shape in cmds.listRelatives(curve, s=True, f=True) or []:
-        shape = cmds.rename(shape, "{}Shape".format(name))
-
-    return curve
+def get_cvs_number(curve):
+    """
+    Get the number of CVs of a curve.
+    :param curve:
+    :return: number of cvs
+    :rtype: int
+    """
+    return cmds.getAttr("{0}.cp".format(curve), s=1)
 
 
+def get_point_at_length(fn_curve, length=0.0):
+    parameter = fn_curve.findParamFromLength(length)
+    point = om.MPoint()
+    fn_curve.getPointAtParam(parameter, point)
+    return point
+
+
+def get_points_along_curve(fn_curve, samples=2):
+    points = []
+    for i in xrange(samples):
+        percent = float(i)/(samples-1) if not samples == 1 else 0
+        point = get_point_at_length(fn_curve, length=fn_curve.length()*percent)
+        points.append(point)
+    return points
+
+
+def get_orient_along_curve(fn_curve, samples=2, temp_normal=None, rotate_order=om.MEulerRotation.kXYZ):
+    
+    rotation_list = [] 
+
+    temp_normal = om.MVector(1,0,0).normal()
+    normals_list = []
+    tangents_list = []
+
+    quaternion = om.MQuaternion()
+    script_util = om.MScriptUtil()
+
+
+    for i in xrange(samples):
+        percent = float(i)/(samples-1) if not samples == 1 else 0
+        parameter = fn_curve.findParamFromLength(fn_curve.length() * percent)
+
+        tangent = fn_curve.tangent(parameter).normal()
+        tangents_list.insert(i, tangent)
+        
+        temp_normal = temp_normal or om.MVector([0,1,0])
+
+        # Parallel Transport to calculate better normals
+        if i == 0:
+            # Use the temp_normal to get one ortogonal vector to the tangent
+            binormal = tangent ^ temp_normal
+            # Get the third ortogonal vector to both tangent and binormal
+            normal = tangent ^ binormal
+            
+        else:
+            previous_tangent = tangents_list[i-1]
+            previous_normal = normals_list[i-1]
+            
+            binormal = tangent ^ previous_tangent
+            normal = previous_normal
+
+            if not binormal.length() == 0:
+                binormal.normalize()
+                theta = math.acos(previous_tangent * tangent)
+                
+                mt = om.MTransformationMatrix()
+                mt.setToRotationAxis(binormal, theta)
+                
+                rotation_mtx = mt.asRotateMatrix()
+                normal *= rotation_mtx
+                
+        normals_list.insert(i, normal)
+        
+        binormal = normal ^ tangent
+        binormal.normalize()
+        
+        matrix = matrix_utils.build_matrix(
+            x=(tangent.x,tangent.y,tangent.z),
+            y=(binormal.x,binormal.y,binormal.z),
+            z=(normal.x,normal.y,normal.z),
+        )
+
+        transform = om.MTransformationMatrix(matrix)
+        rotate = transform.eulerRotation().reorder(rotate_order)
+
+        rotation_list.append(rotate)
+    return rotation_list
+                
 
 def jc_closestPointOnCurve(location, curveObject):
     import maya.OpenMaya as om
@@ -81,119 +158,6 @@ def jc_closestPointOnCurve(location, curveObject):
             
     # just return - parameter, then world space coord.
     return [parameter, (result.x), (result.y), (result.z)]
-
-
-def rebuild_curve(curve, spans):
-    cmds.rebuildCurve(curve, rebuildType=0, degree=1, spans=spans)
-    return curve
-
-def get_cvs_number(curve):
-    """
-    Get the number of CVs of a curve.
-    :param curve:
-    :return: number of cvs
-    :rtype: int
-    """
-    return cmds.getAttr("{0}.cp".format(curve), s=1)
-
-
-def split_curve_to_parameter(curve, num):
-    """
-    Get a list of parameters evenly spaced along a curve, based on the
-    length of the curve. Ranges are normalizes to be between 0-1.
-    :param str curve:
-    :param int num:
-    :return: parameters
-    :rtype: list
-    """
-    mfn_curve = om.MFnNurbsCurve(transforms.get_dag_path(curve))
-    increment = 1.0 / (num - 1)
-
-    # get parameters
-    parameters = []
-    for i in range(num):
-        parameter = mfn_curve.findParamFromLength(mfn_curve.length() * increment * i)
-        parameters.append(parameter)
-
-    # # normalize
-    # factor = parameters[-1]
-    # parameters = [p / factor for p in parameters]
-
-    if cmds.getAttr("{0}.form".format(curve)) == 2:
-        parameters.insert(0, parameters[-1])
-        parameters.pop(-1)
-
-    return parameters
-
-
-def snap_to(target, obj, rot=True, trans=True):
-    """
-    TODO: make it apply to points and verts, etc
-    """
-    if trans:
-        pos = cmds.xform(target, q=True, ws=True, rp=True)
-        cmds.xform(obj, ws=True, t=pos)
-    if rot:
-        rot = cmds.xform(target, q=True, ws=True, ro=True)
-        cmds.xform(obj, ws=True, ro=rot)
-
-
-def align_to_curve(crv=None, obj=None, param=None, destructive=True):
-    """
-    places the obj on the curve aligned to . . .
-    Args:
-        obj (string): object to align
-        crv: (string): curve TRANSFORM to align to
-        param (float): parameter along curve to position and orient to
-        *args:
-    Returns:
-        void
-    """
-    # TODO - check on non-orig geo, check the matrix plugin is loaded
-    if not obj and crv and param:
-        cmds.warning("Didnt' get all the correct params! (obj, crv, param)")
-        return ()
-
-    if not transforms.type_check(crv, "nurbsCurve"):
-        cmds.warning("Crv param wasn't a curve!")
-        return ()
-
-    crvShp = cmds.listRelatives(crv, s=True)[0]
-    tempObj = cmds.group(empty=True, name="tempCrvNull")
-
-    poci = cmds.shadingNode("pointOnCurveInfo", asUtility=True, name="tempPOCI")
-    cmds.connectAttr("{0}.worldSpace[0]".format(crvShp), "{0}.inputCurve".format(poci))
-    cmds.setAttr("{0}.parameter".format(poci), param)
-    cmds.connectAttr("{0}.position".format(poci), "{0}.translate".format(tempObj))
-    sideVal = cmds.getAttr("{0}.normalizedNormal".format(poci))[0]
-    side = om.MVector(sideVal[0], sideVal[1], sideVal[2])
-    frontVal = cmds.getAttr("{0}.normalizedTangent".format(poci))[0]
-    front = om.MVector(frontVal[0], frontVal[1], frontVal[2])
-
-    up = side ^ front
-
-    matrix = cmds.shadingNode("fourByFourMatrix", asUtility=True, name="temp4x4")
-    decomp = cmds.shadingNode("decomposeMatrix", asUtility=True, name="tempDM")
-    yrow = [side[0], side[1], side[2], 0]
-    xrow = [front[0], front[1], front[2], 0]
-    zrow = [up[0], up[1], up[2], 0]
-
-    for col in range(3):
-        cmds.setAttr("{0}.in0{1}".format(matrix, col), xrow[col])
-        cmds.setAttr("{0}.in1{1}".format(matrix, col), yrow[col])
-        cmds.setAttr("{0}.in2{1}".format(matrix, col), zrow[col])
-
-    cmds.setAttr("{0}.in33".format(matrix), 1)
-
-    cmds.connectAttr("{0}.output".format(matrix), "{0}.inputMatrix".format(decomp))
-    cmds.connectAttr("{0}.outputRotate".format(decomp), "{0}.rotate".format(tempObj))
-
-    snap_to(tempObj, obj)
-
-    if destructive:
-        pass
-
-    # cmds.delete(tempObj, poci, decomp, matrix)
 
 
 def create_locators_on_curve(curve, count, destructive=False):
