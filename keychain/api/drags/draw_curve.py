@@ -7,7 +7,6 @@ from keychain.api.drags import abstract_drag
 from keychain.api.utils import curves
 
 
-
 class DrawCurveContext(abstract_drag.AbstractContextDragger):
     NAME = "DrawContext"
     def __init__(self, name=None, *args, **kwargs):

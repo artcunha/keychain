@@ -7,19 +7,32 @@ class Timeline(object):
     def __init__(self):
         pass
 
-    def scrub_frames(self, frame_range=None):
-        frame_range = frame_range or self.frame_range
+    def loop_through(self, frame_range=None, full_range=False):
+        frame_range = frame_range or (self.anim_frame_range if full_range else self.frame_range)
         for frame in xrange(*frame_range):
             yield frame
 
-    def scrub_timeline(self, frameRange=None, startEnd=False):
+
+    def scrub_timeline(self, frameRange=None, full_range=False):
         current_time = self.current_time
-        frame_range = frame_range or (self.anim_frame_range if startEnd else self.frame_range)
+        frame_range = frame_range or (self.anim_frame_range if full_range else self.frame_range)
         for frame in xrange(*frameRange):
             yield frame
-            omAnim.MAnimControl.setCurrentTime(_frame_to_time(frame))
+            omAnim.MAnimControl.setCurrentTime(self._frame_to_time(frame))
 
         omAnim.MAnimControl.setCurrentTime(current_time)
+
+
+    @staticmethod
+    def get_stepped_frames(frame_range, step=1, full_range=False):
+        frame_range = frame_range or (self.anim_frame_range if full_range else self.frame_range)
+        start, end = frame_range
+        frames = []
+        while start < end:
+            frames.append(start)
+            start += step
+        return frames
+
 
     @property
     def anim_frame_range(self):
@@ -43,7 +56,6 @@ class Timeline(object):
 
     def _time_to_frame(self, time):
         return int(time.asUnits(om.MTime.kFilm))
-
 
     ######## FRAMES
     @property
@@ -126,12 +138,3 @@ class Timeline(object):
     @end_time.setter
     def end_time(self, time):
         return omAnim.MAnimControl.setAnimationEndTime(time)
-
-    @staticmethod
-    def get_stepped_frames(frame_range, step=1):
-        start, end = frame_range
-        frames = []
-        while start < end:
-            frames.append(start)
-            start += step
-        return frames

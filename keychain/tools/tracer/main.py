@@ -2,11 +2,7 @@ import maya.cmds as cmds
 from maya.api import OpenMaya as om2
 
 from keychain.ui import maya_qt
-from keychain.tools.gesture import constants, api
-
-reload(maya_qt)
-reload(constants)
-reload(api)
+from keychain.tools.tracer import constants, api
 
 
 class Controller(object):

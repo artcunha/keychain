@@ -10,7 +10,7 @@ from keychain.api.utils import curves
 from keychain.api.utils import maya_api as maya_api_utils
 from keychain.api import timeline
 
-from keychain.tools.gesture import constants
+from keychain.tools.tracer import constants
 
 class PoseDrawContext(abstract_drag.AbstractContextDragger):
 

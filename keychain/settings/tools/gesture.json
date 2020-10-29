@@ -1,18 +1,13 @@
 
 { 
-    "properties":{
+    "icon":"tracer",
+    "settings":{
         "blend":{
             "name":"Blend",
             "type":"float",
             "default":1,
             "minimum":0,
             "maximum":1
-        },
-        "steps":{
-            "name":"Steps",
-            "type":"int",
-            "default":3,
-            "minimum":1
         },
         "smooth_curve":{
             "name":"Smooth Curve",

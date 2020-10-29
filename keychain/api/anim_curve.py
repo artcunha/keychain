@@ -17,6 +17,7 @@ Todo:
 .. moduleauthor:: Christian López Barrón <christianlb.vfx@outlook.com>
 
 """
+
 # standard
 import re
 import sys
@@ -46,6 +47,7 @@ class AnimCurve(object):
         pass
 
 
+    @classmethod
     def from_node(cls, dg_name):
         anim_data = cls.get_node_anim_data(dg_name)
         return cls(anim_data)
@@ -53,9 +55,6 @@ class AnimCurve(object):
 
     def __init__(self, data):
         self.data = data
-
-
-    def
 
 
     @staticmethod
@@ -249,5 +248,36 @@ class AnimCurve(object):
         if data['tangents_locked']:
             mcurve.setTangentsLocked(index, True)
 
-    __all__ = ['get_node_anim_curves', 'get_node_anim_data', 'set_node_anim_data', 'it_anim_curves_data',
-               'it_node_anim_curves_data']
+"""
+Example of data:
+{u'|pCube1': {u'translateX': {'data': {
+    'is_static': False,
+    'is_weighted': False,
+    'keys': {0: {'in_tangent': {'xy': (1.0,
+                                        0.0)},
+                'in_tangent_type': 2,
+                'is_breakdown': False,
+                'out_tangent': {'xy': (0.2140544354915619,
+                                        0.9768217206001282)},
+                'out_tangent_type': 2,
+                'tangents_locked': True,
+                'time': 1.0,
+                'value': -5.394801740406098},
+            1: {'in_tangent': {'xy': (0.2140544354915619,
+                                        0.9768217206001282)},
+                'in_tangent_type': 2,
+                'is_breakdown': False,
+                'out_tangent': {'xy': (1.0,
+                                        0.0)},
+                'out_tangent_type': 2,
+                'tangents_locked': True,
+                'time': 60.0,
+                'value': 5.8236216588255445}},
+    'post_infinity_type': 4,
+    'pre_infinity_type': 4},
+    'destination': {'attr': u'translateX',
+                'node': u'|pCube1'},
+    'is_blended': False,
+    'outputs': [u'pCube1.translateX']},
+ u'|pSphere1': {u'translateX': {'data': {'is_static': False,
+"""

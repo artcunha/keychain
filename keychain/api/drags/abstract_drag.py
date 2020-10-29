@@ -1,10 +1,12 @@
-# ACKNOWLEDGEMENTS:
-# 	Josh Burton
-#   Morgan Loomis
-# 	http://forums.cgsociety.org/archive/index.php/t-983068.html
-# 	http://forums.cgsociety.org/archive/index.php/t-1002257.html
-# 	https://groups.google.com/forum/?fromgroups#!topic/python_inside_maya/n6aJq27fg0o%5B1-25%5D
-#======================================================================================================================
+"""
+ACKNOWLEDGEMENTS:
+	Josh Burton
+    Morgan Loomis
+	http://forums.cgsociety.org/archive/index.php/t-983068.html
+	http://forums.cgsociety.org/archive/index.php/t-1002257.html
+	https://groups.google.com/forum/?fromgroups#!topic/python_inside_maya/n6aJq27fg0o%5B1-25%5D
+"""
+
 import maya.cmds as cmds
 import maya.mel
 import maya.OpenMaya as om

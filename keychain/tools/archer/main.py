@@ -4,11 +4,6 @@ from maya.api import OpenMaya as om2
 from keychain.ui import maya_qt
 from keychain.tools.archer import constants, api
 
-reload(maya_qt)
-reload(widget)
-reload(canvas)
-reload(constants)
-reload(api)
 
 class Controller(object):
 
