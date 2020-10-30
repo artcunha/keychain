@@ -13,34 +13,34 @@ def append_to_path():
 
 def get_setting_file(setting):
 
-    settings = None
-    settings_file = None
+    filepath = None
     settings_dirs = os.environ["KC_SETTINGS"]
 
     if not settings_dirs:
         LOGGER.error("No settings path set to KC_SETTINGS")
         return 
-
+    
+    # TODO Nested configs
     # for folder in settings_dirs.split(os.pathsep):
     for root, dirnames, filenames in os.walk(settings_dirs):
         for json_file in fnmatch.filter(filenames, "{}.json".format(setting)):
-            settings_file = json_file
+            filepath = json_file
             
-    return settings_file
+    return filepath
 
 def get_settings(setting):
-    settings_file = get_setting_file(setting)
-    if not settings_file:
+    filepath = get_setting_file(setting)
+    if not filepath:
         LOGGER.error("No settings file found for {} in {}".format(setting, os.environ["KC_SETTINGS"]))
         return 
 
-    with open(settings_file, "r") as file_read:
+    with open(filepath, "r") as file_read:
         settings = json.load(file_read)
 
     return settings
         
 
-def save_settings(settings_file):
-    with open(settings_file, "w") as file_for_write:
-        json.dump(self.settings, file_for_write, indent=4)
+def save_settings(filepath, settings):
+    with open(filepath, "w") as file_for_write:
+        json.dump(settings, file_for_write, indent=4)
         
