@@ -19,5 +19,5 @@ As an alternative to motionpaths, this will key the selected nodes along a drawn
 
 ### Tracer ###
 Drawing based approach for posing in screen-space. Works with IK/FK or any free transforms. 
-![tracer_1](doc/images/tracer_1.gif)
-![tracer_2](doc/images/tracer_2.gif)
+![tracer_1](docs/images/tracer_1.gif)
+![tracer_2](docs/images/tracer_2.gif)
