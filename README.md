@@ -11,7 +11,7 @@ animation/vfx studios.
 
 This is why keychain's is built to be: Modular, fast and readable.
 
-The [tools](https://github.com/artcunha/keychain/python/keychain/tools) provide
+The [tools](python/keychain/tools) provide
 some examples of how to use the api
 
 _______
@@ -19,15 +19,15 @@ _______
 
 ### How to Install ###
 #### Windows ####
-[Get the latest release](https://github.com/artcunha/keychain/releases)
+[Get the latest release](releases)
 
 Or for the latest build:
-1. git clone https://github.com/artcunha/keychain.git
+1. git clone git
 
 2. Copy the python/keychain folder to your maya 'scripts' folder or
 [add it to your python path](https://knowledge.autodesk.com/support/maya/learn-explore/caas/CloudHelp/cloudhelp/2016/ENU/Maya/files/GUID-C0F27A50-3DD6-454C-A4D1-9E3C44B3C990-htm.html).
 
-3. Copy the [icons folder](https://github.com/artcunha/keychain/icons) to your
+3. Copy the [icons folder](icons) to your
 icons folder or add it to your [XBMLANGPATH](https://knowledge.autodesk.com/support/maya/learn-explore/caas/CloudHelp/cloudhelp/2016/ENU/Maya/files/GUID-228CCA33-4AFE-4380-8C3D-18D23F7EAC72-htm.html).
 
 
