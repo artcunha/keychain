@@ -9,7 +9,7 @@ import maya.cmds as cmds
 import maya.OpenMayaUI as omui
 
 
-def maya_window():
+def get_maya_window():
     """Get the main Maya window as a QtWidgets.QMainWindow instance
 
     Returns:

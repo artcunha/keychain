@@ -11,36 +11,36 @@ def append_to_path():
     pass
 
 
-def get_setting_file(setting):
+def get_config_file(config):
 
     filepath = None
-    settings_dirs = os.environ["KC_SETTINGS"]
+    configs_dirs = os.environ["KC_CONFIG"]
 
-    if not settings_dirs:
-        LOGGER.error("No settings path set to KC_SETTINGS")
+    if not configs_dirs:
+        LOGGER.error("No configs path set to KC_CONFIG")
         return 
     
     # TODO Nested configs
-    # for folder in settings_dirs.split(os.pathsep):
-    for root, dirnames, filenames in os.walk(settings_dirs):
-        for json_file in fnmatch.filter(filenames, "{}.json".format(setting)):
+    # for folder in configs_dirs.split(os.pathsep):
+    for root, dirnames, filenames in os.walk(configs_dirs):
+        for json_file in fnmatch.filter(filenames, "{}.json".format(config)):
             filepath = json_file
             
     return filepath
 
-def get_settings(setting):
-    filepath = get_setting_file(setting)
+def get_config(config):
+    filepath = get_config_file(config)
     if not filepath:
-        LOGGER.error("No settings file found for {} in {}".format(setting, os.environ["KC_SETTINGS"]))
+        LOGGER.error("No configs file found for {} in {}".format(config, os.environ["KC_configS"]))
         return 
 
     with open(filepath, "r") as file_read:
-        settings = json.load(file_read)
+        configs = json.load(file_read)
 
-    return settings
+    return config
         
 
-def save_settings(filepath, settings):
+def save_config(filepath, configs):
     with open(filepath, "w") as file_for_write:
-        json.dump(settings, file_for_write, indent=4)
+        json.dump(configs, file_for_write, indent=4)
         

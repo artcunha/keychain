@@ -1,25 +1,33 @@
-from PySide2 import QtGui, QtCore, QtWidgets
-from keychain.api import settings as settings_api
+TOOL_PATH = "keychain.tools.{tool}.main"
+from maya.app.general.mayaMixin import MayaQWidgetDockableMixin
 
+class Toolbar(MayaQWidgetDockableMixin,QtWidgets.QWidget):
+    def __init__(self, parent=ui.maya_qt.get_maya_window()):
+        super(Toolbar, self).__init__(parent)
+        layout = QtWidgets.QHBoxLayout()
+        
+        self.setWindowTitle("Path Tool")
+        self.setAttribute(QtCore.Qt.WA_DeleteOnClose)
+        self.setWindowFlags(QtCore.Qt.Tool)
+        self.setLayout(layout)
+        
+        # settings = settings_api.get_settings("keychain")
+        # self.tools_list = settings.get("UI").get("tools")
+        self.tools_list = ["archer","tracer"]
 
-class Toolbar(QtWidgets.QWidget):
-    layout = QtWidgets.QHBoxLayout()
-    self.setLayout(layout)
-    
-    settings = settings_api.get_settings("keychain")
-    self.tools_list = settings.get("UI").get("tools")
+        for tool in self.tools_list:
+            icon = QtGui.QIcon(":/{}.png".format(tool))
+            button = QtWidgets.QToolButton()
+            button.setFixedSize(60,60)
+            # button.setIcon(icon)
+            button.setText(tool)
+            button.setIconSize(QtCore.QSize(20,20))
+            
+            # button.clicked.connect(getattr(importlib.import_module(TOOL_PATH.format(tool=tool)), "launch"))
+            button.setDefaultAction(getattr(importlib.import_module(TOOL_PATH.format(tool=tool)), "launch"))
 
-    for tool in self.tools_list:
-        icon = QtGui.QIcon(":/{}.png".format(tool))
-        button = QtWidgets.QToolButton()
-        button.setFixedSize(24,24)
-        button.setIcon(icon)
-        button.setIconSize(QtCore.QSize(20,20))
-        cmd = "from keychain.tools import {0};{0}.launch()".format(tool)
-        button.clicked.connect(cmd)
-
-        layout.addWidget(button)
-
+            layout.addWidget(button)
+            
 def launch():
     toolbar = Toolbar()
-    toolbar.show()
+    toolbar.show(dockable=True, floating=False, area='bottom')
