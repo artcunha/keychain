@@ -1,6 +1,10 @@
-TOOL_PATH = "keychain.tools.{tool}.main"
+from PySide2 import QtCore, QtWidgets, QtGui
+import importlib
+
 from maya.app.general.mayaMixin import MayaQWidgetDockableMixin
 
+
+TOOL_PATH = "keychain.tools.{tool}.main"
 class Toolbar(MayaQWidgetDockableMixin,QtWidgets.QWidget):
     def __init__(self, parent=ui.maya_qt.get_maya_window()):
         super(Toolbar, self).__init__(parent)

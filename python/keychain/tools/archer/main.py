@@ -14,7 +14,7 @@ class Controller(object):
             step=3,
         )
 
-    def launch(self):
+    def run(self):
         selection = om2.MGlobal.getActiveSelectionList()
         if selection.length() < 1:
             om2.MGlobal.displayWarning("Please select at least one control.")
@@ -22,10 +22,10 @@ class Controller(object):
 
         self.nodes = selection.getSelectionStrings()
         self.curve_draw_context.nodes = self.nodes
-        
+
         self.curve_draw_context.create()
 
 
 def launch():
     controler = Controller()
-    return controler.launch()
+    return controler.run()

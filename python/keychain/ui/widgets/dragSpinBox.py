@@ -6,10 +6,10 @@ class DragSpinBox(QtWidgets.QLineEdit):
     Source: https://stackoverflow.com/a/55685048
     """
 
-    INT = 0
-    DOUBLE = 1
+    INT = "int"
+    DOUBLE = "double"
 
-    def __init__(self, spinbox_type, value=0, parent=None):
+    def __init__(self, type="int", default=0, minimum=None, maximum=None, parent=None):
         super(DragSpinBox, self).__init__(parent)
 
         self.setToolTip(
@@ -17,19 +17,19 @@ class DragSpinBox(QtWidgets.QLineEdit):
             "(Hold CTRL or SHIFT change rate)"
         )
 
-        if spinbox_type == DragSpinBox.INT:
+        if type == DragSpinBox.INT:
             self.setValidator(QtGui.QIntValidator(parent=self))
         else:
             self.setValidator(QtGui.QDoubleValidator(parent=self))
 
-        self.spinbox_type = spinbox_type
-        self.min = None
-        self.max = None
+        self.type = type
+        self.minimum = minimum
+        self.maximum = maximum
         self.steps = 1
         self.value_at_press = None
         self.pos_at_press = None
 
-        self.setValue(value)
+        self.setValue(default)
 
     def wheelEvent(self, event):
         super(DragSpinBox, self).wheelEvent(event)
@@ -87,36 +87,29 @@ class DragSpinBox(QtWidgets.QLineEdit):
 
         return steps_mult
 
-    def setMinimum(self, value):
-        self.min = value
-
-    def setMaximum(self, value):
-        self.max = value
-
     def setSteps(self, steps):
-        if self.spinbox_type == DragSpinBox.INT:
+        if self.type == DragSpinBox.INT:
             self.steps = max(steps, 1)
         else:
             self.steps = steps
 
     def value(self):
-        if self.spinbox_type == DragSpinBox.INT:
+        if self.type == DragSpinBox.INT:
             return int(self.text())
         else:
             return float(self.text())
 
     def setValue(self, value):
-        if self.min is not None:
-            value = max(value, self.min)
+        if self.minimum:
+            value = max(value, self.minimum)
 
-        if self.max is not None:
-            value = min(value, self.max)
+        if self.maximum:
+            value = min(value, self.maximum)
 
-        if self.spinbox_type == DragSpinBox.INT:
+        if self.type == DragSpinBox.INT:
             self.setText(str(int(value)))
         else:
             self.setText(str(float(value)))
-
 
 class Test(QtWidgets.QWidget):
     """

@@ -31,6 +31,9 @@ Or for the latest build:
 icons folder or add it to your [XBMLANGPATH](https://knowledge.autodesk.com/support/maya/learn-explore/caas/CloudHelp/cloudhelp/2016/ENU/Maya/files/GUID-228CCA33-4AFE-4380-8C3D-18D23F7EAC72-htm.html).
 
 
+## API ##
+[Check the documentation for the api here](python\keychain)
+
 ## Tools ##
 ### Archer ###
 As an alternative to motion-paths, this will key the selected nodes along a drawn path without the use of constraints.  
@@ -39,5 +42,3 @@ As an alternative to motion-paths, this will key the selected nodes along a draw
 Drawing based approach for posing in screen-space. Works with IK/FK or any free transforms.
 ![tracer_1](docs/images/tracer_1.gif)
 ![tracer_2](docs/images/tracer_2.gif)
-
-## API ##

@@ -4,7 +4,7 @@
     "settings":{
         "blend":{
             "name":"Blend",
-            "type":"float",
+            "type":"double",
             "default":1,
             "minimum":0,
             "maximum":1
