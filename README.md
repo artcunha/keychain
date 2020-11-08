@@ -32,7 +32,7 @@ icons folder or add it to your [XBMLANGPATH](https://knowledge.autodesk.com/supp
 
 
 ## API ##
-[Check the documentation for the api here](python\keychain)
+[Check the documentation for the api here](python/keychain)
 
 ## Tools ##
 ### Archer ###
