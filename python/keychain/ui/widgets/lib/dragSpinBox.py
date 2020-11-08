@@ -77,7 +77,7 @@ class DragSpinBox(QtWidgets.QLineEdit):
 
         super(DragSpinBox, self).mouseMoveEvent(event)
 
-    def getStepsMultiplier(self, event):
+    def get_steps_multiplier(self, event):
         steps_mult = 1
 
         if event.modifiers() == QtCore.Qt.CTRL:
@@ -87,7 +87,7 @@ class DragSpinBox(QtWidgets.QLineEdit):
 
         return steps_mult
 
-    def setSteps(self, steps):
+    def set_steps(self, steps):
         if self.type == DragSpinBox.INT:
             self.steps = max(steps, 1)
         else:
@@ -110,29 +110,3 @@ class DragSpinBox(QtWidgets.QLineEdit):
             self.setText(str(int(value)))
         else:
             self.setText(str(float(value)))
-
-class Test(QtWidgets.QWidget):
-    """
-    Test widget.
-    """
-    
-    def __init__(self, parent=None):
-        super(MyTool, self).__init__(parent)
-
-        self.setWindowTitle("Custom spinboxes")
-
-        int_spinbox = DragSpinBox(DragSpinBox.INT, parent=self)
-        int_spinbox.setMinimum(-50)
-        int_spinbox.setMaximum(100)
-
-        float_spinbox = DragSpinBox(DragSpinBox.DOUBLE, parent=self)
-        float_spinbox.setSteps(0.1)
-
-        main_layout = QtWidgets.QVBoxLayout()
-        main_layout.addWidget(int_spinbox)
-        main_layout.addWidget(float_spinbox)
-        self.setLayout(main_layout)
-
-tool_instance = TestDragSpinBox()
-tool_instance.resize(300, 150)
-tool_instance.show()

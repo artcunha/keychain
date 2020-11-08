@@ -60,7 +60,7 @@ Settings serve two main functions in keychain:
   1. To have a clean, maintainable way of changing preferences without the need
   to touch core api.
   2. To standardized and automate the process of writing UI code by automatically
-  creating a settings menu from the config. 
+  creating a settings menu from the config.
 
 ```json
 {
@@ -81,9 +81,3 @@ Settings serve two main functions in keychain:
         },
 }
 ```
-
-
-
-
-
-## Modifiers ##
