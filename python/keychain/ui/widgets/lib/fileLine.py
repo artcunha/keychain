@@ -4,7 +4,7 @@ from PySide2 import QtCore, QtWidgets
 class FileLine(QtWidgets.QWidget):
     value_set_signal = QtCore.Signal(str)
 
-    def __init__(self, parent=None):
+    def __init__(self, parent=None, **kwargs):
         super(FileLine, self).__init__(parent)
 
         self.text_line = QtWidgets.QLineEdit()

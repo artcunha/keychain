@@ -2,7 +2,7 @@ from PySide2 import QtCore, QtWidgets
 
 class LineEdit(QtWidgets.QWidget):
 
-    def __init__(self,label, default_text="", tooltip="", label_width=None, parent=None):
+    def __init__(self, label, default_text="", tooltip="", label_width=None, parent=None, **kwargs):
         super(LineEdit, self).__init__(parent)
 
         self.setToolTip(tooltip)

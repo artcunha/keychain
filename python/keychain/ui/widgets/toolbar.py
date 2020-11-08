@@ -33,7 +33,7 @@ class Toolbar(MayaQWidgetDockableMixin,QtWidgets.QWidget):
         button = QtWidgets.QToolButton()
         # Set right click menu
         button.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
-        button.customContextMenuRequested.connect(lambda point: self.on_context_menu(point, tool))
+        button.customContextMenuRequested.connect(lambda point: self.on_context_menu(point, button))
         # Aesthetics
         button.setFixedSize(60,60)
         # button.setIcon(icon)
@@ -46,16 +46,18 @@ class Toolbar(MayaQWidgetDockableMixin,QtWidgets.QWidget):
 
         self.layout().addWidget(button)
     
-    def on_context_menu(self, point, tool):
+    def on_context_menu(self, point, button):
         # Show settings context menu
-        tool_sting = self.tools_settings.get(tool)
+        tool_sting = self.tools_settings.get(button.text())
         if not tool_sting:
             return
         menu = settings_menu.SettingsMenu(tool_sting, parent=self)
-        menu.exec_(self.button.mapToGlobal(point))    
+        # menu.exec_(self.button.mapToGlobal(point))    
+        menu.move(button.mapToGlobal(point)) 
+        menu.show()  
 
 
 def launch():
     toolbar = Toolbar()
-    toolbar.show(dockable=True, floating=False, area="bottom")
+    toolbar.show(dockable=True, floating=False, area="top")
 

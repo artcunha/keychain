@@ -6,6 +6,9 @@ class SettingsMenu(QtWidgets.QWidget):
     def __init__(self, settings, parent=None):
         super(SettingsMenu, self).__init__(parent)
         self.settings = settings
+        # self.setWindowFlags(QtCore.Qt.Dialog)
+        self.setWindowFlags(QtCore.Qt.FramelessWindowHint | QtCore.Qt.Popup)
+
         self.build_ui(settings)
     
     def build_ui(self, settings):
@@ -14,8 +17,7 @@ class SettingsMenu(QtWidgets.QWidget):
         self.setLayout(main_layout)
 
         for sting, attrs in settings.items():
-            print sting
-            widget = constants.MAPPING[attrs.get(type)]
-            attr_widget = widget(**attrs.as_dict())
+            widget = constants.MAPPING[attrs.get("type")]
+            attr_widget = widget(sting, **attrs)
             main_layout.addWidget(attr_widget)
     

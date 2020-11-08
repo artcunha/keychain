@@ -1,6 +1,6 @@
 from PySide2 import QtCore, QtGui, QtWidgets
 
-class DragSpinBox(QtWidgets.QLineEdit):
+class DragLine(QtWidgets.QLineEdit):
     """
     Custom 'spinBox' to mimic the middle-mouse scrollable behaviour of maya's channelBox.
     Source: https://stackoverflow.com/a/55685048
@@ -9,15 +9,15 @@ class DragSpinBox(QtWidgets.QLineEdit):
     INT = "int"
     DOUBLE = "double"
 
-    def __init__(self, type="int", default=0, minimum=None, maximum=None, parent=None):
-        super(DragSpinBox, self).__init__(parent)
+    def __init__(self, type="int", default=0, minimum=None, maximum=None, parent=None, **kwargs):
+        super(DragLine, self).__init__(parent)
 
         self.setToolTip(
             "Hold and drag middle mouse button to adjust the value\n"
             "(Hold CTRL or SHIFT change rate)"
         )
 
-        if type == DragSpinBox.INT:
+        if type == DragLine.INT:
             self.setValidator(QtGui.QIntValidator(parent=self))
         else:
             self.setValidator(QtGui.QDoubleValidator(parent=self))
@@ -32,9 +32,9 @@ class DragSpinBox(QtWidgets.QLineEdit):
         self.setValue(default)
 
     def wheelEvent(self, event):
-        super(DragSpinBox, self).wheelEvent(event)
+        super(DragLine, self).wheelEvent(event)
 
-        steps_mult = self.getStepsMultiplier(event)
+        steps_mult = self.get_steps_multiplier(event)
 
         if event.delta() > 0:
             self.setValue(self.value() + self.steps * steps_mult)
@@ -47,7 +47,7 @@ class DragSpinBox(QtWidgets.QLineEdit):
             self.pos_at_press = event.pos()
             self.setCursor(QtGui.QCursor(QtCore.Qt.SizeHorCursor))
         else:
-            super(DragSpinBox, self).mousePressEvent(event)
+            super(DragLine, self).mousePressEvent(event)
             self.selectAll()
 
     def mouseReleaseEvent(self, event):
@@ -57,7 +57,7 @@ class DragSpinBox(QtWidgets.QLineEdit):
             self.setCursor(QtGui.QCursor(QtCore.Qt.IBeamCursor))
             return
 
-        super(DragSpinBox, self).mouseReleaseEvent(event)
+        super(DragLine, self).mouseReleaseEvent(event)
 
     def mouseMoveEvent(self, event):
         if event.buttons() != QtCore.Qt.MiddleButton:
@@ -66,7 +66,7 @@ class DragSpinBox(QtWidgets.QLineEdit):
         if self.pos_at_press is None:
             return
 
-        steps_mult = self.getStepsMultiplier(event)
+        steps_mult = self.get_steps_multiplier(event)
 
         delta = event.pos().x() - self.pos_at_press.x()
         delta /= 6  # Make movement less sensitive.
@@ -75,7 +75,7 @@ class DragSpinBox(QtWidgets.QLineEdit):
         value = self.value_at_press + delta
         self.setValue(value)
 
-        super(DragSpinBox, self).mouseMoveEvent(event)
+        super(DragLine, self).mouseMoveEvent(event)
 
     def get_steps_multiplier(self, event):
         steps_mult = 1
@@ -88,13 +88,13 @@ class DragSpinBox(QtWidgets.QLineEdit):
         return steps_mult
 
     def set_steps(self, steps):
-        if self.type == DragSpinBox.INT:
+        if self.type == DragLine.INT:
             self.steps = max(steps, 1)
         else:
             self.steps = steps
 
     def value(self):
-        if self.type == DragSpinBox.INT:
+        if self.type == DragLine.INT:
             return int(self.text())
         else:
             return float(self.text())
@@ -106,7 +106,27 @@ class DragSpinBox(QtWidgets.QLineEdit):
         if self.maximum:
             value = min(value, self.maximum)
 
-        if self.type == DragSpinBox.INT:
+        if self.type == DragLine.INT:
             self.setText(str(int(value)))
         else:
             self.setText(str(float(value)))
+
+
+class DragSpinBox(QtWidgets.QWidget):
+
+    def __init__(self, label, tooltip="", label_width=None, type="int", default=0, minimum=None, maximum=None,  parent=None, **kwargs):
+        super(DragSpinBox, self).__init__(parent)
+
+        self.setToolTip(tooltip)
+
+        layout = QtWidgets.QHBoxLayout()
+        self.setLayout(layout)
+        self.line = DragLine(type="int", default=0, minimum=None, maximum=None,  parent=None, **kwargs)
+
+        label = QtWidgets.QLabel(label)
+        label.setAlignment(QtCore.Qt.AlignRight)
+        if label_width is not None:
+            label.setFixedWidth(label_width)
+
+        layout.addWidget(label)
+        layout.addWidget(self.line)
