@@ -2,8 +2,8 @@ import importlib
 from PySide2 import QtCore, QtWidgets, QtGui
 from maya.app.general.mayaMixin import MayaQWidgetDockableMixin
 
-from keychain import config
-from keychain.api import settings as settings_api
+from keychain.core import config as config_api
+from keychain.core import settings as settings_api
 from keychain.ui import maya_qt
 from keychain.ui.widgets import settings_menu
 
@@ -20,11 +20,10 @@ class Toolbar(MayaQWidgetDockableMixin,QtWidgets.QWidget):
         self.setAttribute(QtCore.Qt.WA_DeleteOnClose)
         self.setWindowFlags(QtCore.Qt.Tool)
         
-        kc_settings = settings_api.get_settings("keychain")
-        self.tools_list = kc_settings.get("UI").get("tools")
-        self.tools_list = ["archer","tracer"]
-
-        self.tools_settings = settings_api.get_tools_settings(self.tools_list)
+        kc_config = config_api.get_config("keychain")
+        self.tools_list = kc_config.get("UI").get("tools")
+        
+        self.tools_settings = {tool : settings_api.get_settings(tool) for tool in self.tools_list}
         # Create the ToolButton for each tool
         [self.add_tool(tool) for tool in self.tools_list]
 
@@ -37,7 +36,7 @@ class Toolbar(MayaQWidgetDockableMixin,QtWidgets.QWidget):
         button.customContextMenuRequested.connect(lambda point: self.on_context_menu(point, tool))
         # Aesthetics
         button.setFixedSize(60,60)
-        button.setIcon(icon)
+        # button.setIcon(icon)
         button.setText(tool)
         button.setIconSize(QtCore.QSize(20,20))
         
@@ -49,13 +48,14 @@ class Toolbar(MayaQWidgetDockableMixin,QtWidgets.QWidget):
     
     def on_context_menu(self, point, tool):
         # Show settings context menu
-        settings = self.tools_settings.get(tool, None)
-        if not settings:
+        tool_sting = self.tools_settings.get(tool)
+        if not tool_sting:
             return
-        menu = settings_menu.SettingsMenu(settings, parent=self)
+        menu = settings_menu.SettingsMenu(tool_sting, parent=self)
         menu.exec_(self.button.mapToGlobal(point))    
 
 
 def launch():
     toolbar = Toolbar()
     toolbar.show(dockable=True, floating=False, area="bottom")
+

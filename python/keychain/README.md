@@ -39,7 +39,17 @@ Tools can be written/added from any directory listed under the `KC_TOOLS`
 environment variable.
 
 ### File Convention ###
-Every tool expects a `main.py` with the following:
+Every tool expects a `main.py` with a `launch()` method like the following:
+```python
+# main.py
+
+# UI entry point to launch the tool
+def launch():
+    print ("Tool Active")
+```
+The launch method will be called when the tool's button in the toolbar is pressed.
+
+A more complex example using a controller class:
 ```python
 class Controller(object):
   def __init__(self):
@@ -51,9 +61,10 @@ class Controller(object):
 
 def launch():
     # UI entry point to launch the tool  
-    controler = Controller()
-    return controler.run()
+    controller = Controller()
+    return controller.run()
 ```
+
 
 ### Settings ###
 Settings serve two main functions in keychain:

@@ -1,11 +1,11 @@
-from keychain.ui.widgets import lib
+from keychain.ui.widgets.lib import dragSpinBox, checkBox, lineEdit, comboBox, fileLine
 
 MAPPING = {
-    "int" : lib.dragSpinBox.DragSpinBox,
-    "double" : lib.dragSpinBox.DragSpinBox,
-    "bool" : lib.checkBox,
-    "str" : lib.lineEdit.LineEdit,
-    "list" : lib.comboBox,
+    "int" : dragSpinBox.DragSpinBox,
+    "double" : dragSpinBox.DragSpinBox,
+    "bool" : checkBox,
+    "str" : lineEdit.LineEdit,
+    "list" : comboBox,
 
-    "file" : lib.fileLine.FileLine,
+    "file" : fileLine.FileLine,
 }

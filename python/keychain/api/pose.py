@@ -70,7 +70,7 @@ class AnimBlock(object):
     def set_synced(self, synced=True):
         self._state = State.SYNCED if synced else State.UNSYNCED
 
-    def export_to_file(self, filepath, anim_curves=None)
+    def export_to_file(self, filepath, anim_curves=None):
         anim_curves = anim_curves or self.anim_curves
         dump_dict = {
             "timestamp":self._get_timestamp(),

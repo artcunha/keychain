@@ -13,8 +13,9 @@ class SettingsMenu(QtWidgets.QWidget):
         main_layout = QtWidgets.QVBoxLayout()
         self.setLayout(main_layout)
 
-        for stings in settings:
-            widget = constants.MAPPING.GET(stings.type, None)
-            widget(**stings.as_dict())
-            main_layout.addWidget(widget)
+        for sting, attrs in settings.items():
+            print sting
+            widget = constants.MAPPING[attrs.get(type)]
+            attr_widget = widget(**attrs.as_dict())
+            main_layout.addWidget(attr_widget)
     
