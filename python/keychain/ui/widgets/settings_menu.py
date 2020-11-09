@@ -18,6 +18,6 @@ class SettingsMenu(QtWidgets.QWidget):
 
         for sting, attrs in settings.items():
             widget = constants.MAPPING[attrs.get("type")]
-            attr_widget = widget(sting, **attrs)
+            attr_widget = widget(**attrs)
             main_layout.addWidget(attr_widget)
     

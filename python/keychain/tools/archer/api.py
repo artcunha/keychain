@@ -1,12 +1,11 @@
 
 import maya.cmds as cmds
-import maya.mel
 import maya.OpenMaya as om
 
 import math
 
 from keychain.api.drags import abstract_drag
-from keychain.api.utils import curves
+from keychain.api.utils import curves, camera
 from keychain.api.utils import maya_api as maya_api_utils
 from keychain.api import timeline
 
@@ -71,14 +70,14 @@ class DrawCurveContext(abstract_drag.AbstractContextDragger):
 
         cmds.select(self.nodes)
     
-    def _get_camera_vector(fn_curve):
+    def _get_camera_vector(self, fn_curve):
         ## Get camera vector
         cam_matrix = camera.get_active_camera().inclusiveMatrix()
         # Get position data from the matrix
         cam_point = om.MPoint(cam_matrix(3,0), cam_matrix(3,1), cam_matrix(3,2),)
         ## Get camera vector
         crv_point = om.MPoint()
-        fn_curve.getPointAtParam(parameter, crv_point)
+        fn_curve.getPointAtParam(0.0, crv_point)
         return om.MVector(crv_point-cam_point).normal()
 
     def delete_curve(self, curve=None):

@@ -3,9 +3,9 @@ from keychain.ui.widgets.lib import dragSpinBox, checkBox, lineEdit, comboBox, f
 MAPPING = {
     "int" : dragSpinBox.DragSpinBox,
     "double" : dragSpinBox.DragSpinBox,
-    "bool" : checkBox,
+    "bool" : checkBox.CheckBox,
     "str" : lineEdit.LineEdit,
-    "list" : comboBox,
+    "list" : comboBox.ComboBox,
 
     "file" : fileLine.FileLine,
 }

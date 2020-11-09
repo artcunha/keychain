@@ -2,15 +2,20 @@
 { 
     "icon":"tracer",
     "settings":{
+        "rotation":{
+            "label":"Rotation",
+            "type":"bool",
+            "default":false
+        },
         "blend":{
-            "name":"Blend",
+            "label":"Blend",
             "type":"double",
             "default":1,
             "minimum":0,
             "maximum":1
         },
         "smooth_curve":{
-            "name":"Smooth Curve",
+            "label":"Smooth Curve",
             "type":"int",
             "default":100,
             "minimum":0,

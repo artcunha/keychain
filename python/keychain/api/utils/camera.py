@@ -1,5 +1,6 @@
 
 import maya.OpenMayaUI as omui
+import maya.OpenMaya as om
 
 
 def get_active_camera():

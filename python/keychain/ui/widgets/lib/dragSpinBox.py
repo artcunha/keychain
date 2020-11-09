@@ -78,12 +78,12 @@ class DragLine(QtWidgets.QLineEdit):
         super(DragLine, self).mouseMoveEvent(event)
 
     def get_steps_multiplier(self, event):
-        steps_mult = 1
+        steps_mult = 0.2
 
         if event.modifiers() == QtCore.Qt.CTRL:
-            steps_mult = 10
+            steps_mult = 2
         elif event.modifiers() == QtCore.Qt.SHIFT:
-            steps_mult = 0.1
+            steps_mult = 0.05
 
         return steps_mult
 
@@ -114,19 +114,19 @@ class DragLine(QtWidgets.QLineEdit):
 
 class DragSpinBox(QtWidgets.QWidget):
 
-    def __init__(self, label, tooltip="", label_width=None, type="int", default=0, minimum=None, maximum=None,  parent=None, **kwargs):
+    def __init__(self, label=None, tooltip="", label_width=None, type="int", default=0, minimum=None, maximum=None,  parent=None, **kwargs):
         super(DragSpinBox, self).__init__(parent)
 
         self.setToolTip(tooltip)
 
         layout = QtWidgets.QHBoxLayout()
         self.setLayout(layout)
-        self.line = DragLine(type="int", default=0, minimum=None, maximum=None,  parent=None, **kwargs)
+        self.line = DragLine(type=type, default=default, minimum=minimum, maximum=maximum, parent=parent, **kwargs)
 
-        label = QtWidgets.QLabel(label)
-        label.setAlignment(QtCore.Qt.AlignRight)
+        label_widget = QtWidgets.QLabel(label)
+        label_widget.setAlignment(QtCore.Qt.AlignRight)
         if label_width is not None:
-            label.setFixedWidth(label_width)
+            label_widget.setFixedWidth(label_width)
 
-        layout.addWidget(label)
+        layout.addWidget(label_widget)
         layout.addWidget(self.line)

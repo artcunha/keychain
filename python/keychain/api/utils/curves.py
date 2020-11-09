@@ -6,6 +6,8 @@ import maya.OpenMaya as om
 import maya.api.OpenMaya as om2
 import maya.OpenMayaUI as omui
 
+from keychain.api.utils import matrix as matrix_utils
+
 def create_curve_from_positions(name, positions_list):
     # Calculate curve degrees
     if len(positions_list) <= 3:
