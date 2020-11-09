@@ -32,7 +32,7 @@ environment variable for tools under same name.
     ]
 }
 ```
-![Toolbar example](docs\images\toolbar_settings.gif)
+![Toolbar example](docs/images/toolbar_settings.gif)
 
 ## Writing Tools ##
 Tools can be written/added from any directory listed under the `KC_TOOLS`
