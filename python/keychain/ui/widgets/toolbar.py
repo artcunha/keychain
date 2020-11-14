@@ -5,6 +5,7 @@ from maya.app.general.mayaMixin import MayaQWidgetDockableMixin
 from keychain.core import config as config_api
 from keychain.core import settings as settings_api
 from keychain.ui import maya_qt
+from keychain.ui import icons as icons_utils
 from keychain.ui.widgets import settings_menu
 
 
@@ -29,14 +30,15 @@ class Toolbar(MayaQWidgetDockableMixin,QtWidgets.QWidget):
 
         
     def add_tool(self, tool):
-        icon = QtGui.QIcon(":/{}.png".format(tool))
+        # icon = QtGui.QIcon(":/{}.png".format(tool))
+        icon = QtGui.QIcon(icons_utils.get_icon(tool))
         button = QtWidgets.QToolButton()
         # Set right click menu
         button.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
-        button.customContextMenuRequested.connect(lambda point: self.on_context_menu(point, button))
+        button.customContextMenuRequested.connect(lambda point: self.on_context_menu(button))
         # Aesthetics
         button.setFixedSize(60,60)
-        # button.setIcon(icon)
+        button.setIcon(icon)
         button.setText(tool)
         button.setIconSize(QtCore.QSize(20,20))
         
@@ -46,14 +48,13 @@ class Toolbar(MayaQWidgetDockableMixin,QtWidgets.QWidget):
 
         self.layout().addWidget(button)
     
-    def on_context_menu(self, point, button):
+    def on_context_menu(self, button):
         # Show settings context menu
         tool_sting = self.tools_settings.get(button.text())
         if not tool_sting:
             return
         menu = settings_menu.SettingsMenu(tool_sting, parent=self)
-        # menu.exec_(self.button.mapToGlobal(point))    
-        menu.move(button.mapToGlobal(point)) 
+        menu.move(button.mapToGlobal(QtCore.QPoint(40, 0))) 
         menu.show()  
 
 

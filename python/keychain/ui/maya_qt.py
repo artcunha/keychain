@@ -52,6 +52,6 @@ class MayaWidget(QtWidgets.QWidget):
 
     @classmethod
     def launch_dialog(cls):
-        widget = cls(parent=maya_window())
+        widget = cls(parent=get_maya_window())
         widget.show()
         return widget

@@ -1,7 +1,7 @@
 import os
 import sys
 
-ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 
 
 def set_key_env(root):
@@ -20,6 +20,13 @@ def set_key_env(root):
     except KeyError:
         os.environ["KC_TOOLS"] = tools_path
 
+    # Icons Path:
+    icons_path = os.path.join(root, "icons")
+    try:
+        os.environ["KC_ICONS"] += "".join((os.pathsep, icons_path))
+    except KeyError:
+        os.environ["KC_ICONS"] = icons_path
+
 def set_maya_env(root):
     #### MAYA ENV:
     # Append python to script path
@@ -29,7 +36,7 @@ def set_maya_env(root):
     if sys.platform.startswith("linux"):
         os.environ["XBMLANGPATH"] += "".join((os.pathsep, os.path.join(root, "resources", "icons", "%B")))
     else:
-        os.environ["XBMLANGPATH"] += "".join((os.pathsep, os.path.join(root, "resources", "icons")))
+        os.environ["XBMLANGPATH"] += os.path.join(root, "resources", "icons")
 
 
 def set_env():
