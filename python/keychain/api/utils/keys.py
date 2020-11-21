@@ -58,7 +58,7 @@ def bake_animation(plugs, frame_range=None, step=1):
     dg.doIt()
 
 
-def copy_animation(source=None, target=None, offset=0, rotateOrder=True):
+def copy_keys(source=None, target=None, offset=0, rotateOrder=True):
     if not cmds.keyframe(source, q=True):
         om.MGlobal.displayInfo("Source: {} has no animation".format(source))
         return
@@ -90,3 +90,29 @@ def copy_animation(source=None, target=None, offset=0, rotateOrder=True):
     #     cmds.animLayer(layer, edit=True, selected=True)
     for each in target:
         cmds.pasteKey(each, option="insert", timeOffset=offset)
+
+
+def apply_euler_filter(transform):
+    """
+    Apply an euler filter on the curves connected to the 
+    transforms' rotation.
+    Args:
+        transform(str): Path to transform
+    """
+    # Get rotation anim curves 
+    rotationCurves = []
+    for channel in ("x","y","z"): 
+        node = "{}.rotate{}".format(transform, channel)
+        
+        # Get animCurve
+        rotationCurves.extend(
+            cmds.listConnections(
+                node, 
+                type="animCurve",
+                destination=False
+            ) or []
+        )
+        
+    # Apply euler filter
+    if rotationCurves:
+        cmds.filterCurve(*rotationCurves, filter="euler")

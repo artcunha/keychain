@@ -27,7 +27,7 @@ def get_config_file(name):
 def get_config(name):
     filepath = get_config_file(name)
     if not filepath:
-        LOGGER.error("No configs file found for {} in {}".format(name, os.environ["KC_configS"]))
+        LOGGER.error("No configs file found for {} in {}".format(name, os.environ.get("KC_CONFIG")))
         raise exceptions.ConfigError 
 
     with open(filepath, "r") as file_read:

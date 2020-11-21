@@ -1,0 +1,11 @@
+
+{ 
+    "icon":"camera.svg",
+    "settings":{
+        "name":{
+            "label":"New camera name",
+            "type":"str",
+            "default":"followCam_#"
+        }
+    }
+}

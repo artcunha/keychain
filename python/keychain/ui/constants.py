@@ -1,4 +1,4 @@
-from keychain.ui.widgets.lib import dragSpinBox, checkBox, lineEdit, comboBox, fileLine
+from keychain.ui.widgets.lib import dragSpinBox, checkBox, lineEdit, comboBox, fileLine, label
 
 MAPPING = {
     "int" : dragSpinBox.DragSpinBox,
@@ -7,5 +7,7 @@ MAPPING = {
     "str" : lineEdit.LineEdit,
     "list" : comboBox.ComboBox,
 
+    "label" : label.Label,
     "file" : fileLine.FileLine,
+    "folder" : fileLine.FolderLine,
 }

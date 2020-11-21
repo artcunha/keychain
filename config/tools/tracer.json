@@ -1,6 +1,6 @@
 
 { 
-    "icon":"tracer",
+    "icon":"tracer.png",
     "settings":{
         "rotation":{
             "label":"Rotation",

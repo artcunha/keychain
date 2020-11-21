@@ -20,7 +20,7 @@ def get_maya_window():
     if mwindow is not None:
         return shiboken2.wrapInstance(long(mwindow), QtWidgets.QWidget)
 
-def ensure_only_widget(name):
+def ensure_single_widget(name):
     """
     Ensure all existing widgets with the same name are destroyed before the new one is craeted.
     """

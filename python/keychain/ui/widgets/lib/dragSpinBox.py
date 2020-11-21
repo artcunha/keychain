@@ -29,7 +29,7 @@ class DragLine(QtWidgets.QLineEdit):
         self.value_at_press = None
         self.pos_at_press = None
 
-        self.setValue(default)
+        self.set_value(default)
 
     def wheelEvent(self, event):
         super(DragLine, self).wheelEvent(event)
@@ -37,9 +37,9 @@ class DragLine(QtWidgets.QLineEdit):
         steps_mult = self.get_steps_multiplier(event)
 
         if event.delta() > 0:
-            self.setValue(self.value() + self.steps * steps_mult)
+            self.set_value(self.value() + self.steps * steps_mult)
         else:
-            self.setValue(self.value() - self.steps * steps_mult)
+            self.set_value(self.value() - self.steps * steps_mult)
 
     def mousePressEvent(self, event):
         if event.buttons() == QtCore.Qt.MiddleButton:
@@ -73,12 +73,12 @@ class DragLine(QtWidgets.QLineEdit):
         delta *= self.steps * steps_mult
 
         value = self.value_at_press + delta
-        self.setValue(value)
+        self.set_value(value)
 
         super(DragLine, self).mouseMoveEvent(event)
 
     def get_steps_multiplier(self, event):
-        steps_mult = 0.2
+        steps_mult = 0.1
 
         if event.modifiers() == QtCore.Qt.CTRL:
             steps_mult = 2
@@ -99,11 +99,11 @@ class DragLine(QtWidgets.QLineEdit):
         else:
             return float(self.text())
 
-    def setValue(self, value):
-        if self.minimum:
+    def set_value(self, value):
+        if self.minimum is not None:
             value = max(value, self.minimum)
 
-        if self.maximum:
+        if self.maximum is not None:
             value = min(value, self.maximum)
 
         if self.type == DragLine.INT:
@@ -114,6 +114,8 @@ class DragLine(QtWidgets.QLineEdit):
 
 class DragSpinBox(QtWidgets.QWidget):
 
+    value_changed_signal = QtCore.Signal()
+
     def __init__(self, label=None, tooltip="", label_width=None, type="int", default=0, minimum=None, maximum=None,  parent=None, **kwargs):
         super(DragSpinBox, self).__init__(parent)
 
@@ -122,6 +124,8 @@ class DragSpinBox(QtWidgets.QWidget):
         layout = QtWidgets.QHBoxLayout()
         self.setLayout(layout)
         self.line = DragLine(type=type, default=default, minimum=minimum, maximum=maximum, parent=parent, **kwargs)
+        self.line.textChanged.connect(lambda value : self.value_changed_signal.emit(int(value)))
+
 
         label_widget = QtWidgets.QLabel(label)
         label_widget.setAlignment(QtCore.Qt.AlignRight)

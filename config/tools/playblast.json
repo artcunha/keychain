@@ -1,0 +1,38 @@
+
+{ 
+    "icon":"playblast.png",
+    "settings":{
+        "name":{
+            "label":"Filename",
+            "type":"str",
+            "default":"playblast"
+        },
+        "folder":{
+            "label":"Output Folder:",
+            "type":"folder",
+            "default": null
+        },
+        "resolution":{
+            "label":"Resolution:",
+            "type":"label",
+            "default": null
+        },
+        "width":{
+            "label":"Width",
+            "type":"int",
+            "default":1280
+        },
+        "height":{
+            "label":"Height",
+            "type":"int",
+            "default":720
+        },
+        "steps":{
+            "label":"Steps",
+            "type":"int",
+            "default":2,
+            "minimum":1,
+            "maximum":30
+        }
+    }
+}

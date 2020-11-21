@@ -25,7 +25,7 @@ def create_path_animation(node, curve, frame_range, follow=True, step=1):
     #     depend_node.findPlug(attr) for attr in constants.ATTRIBUTES_TO_BAKE
     # ]
     # keys_utils.bake_animation(plugs, frame_range=frame_range, step=step)
-    # keys_utils.copy_animation(source=locator, target=node)
+    # keys_utils.copy_keys(source=locator, target=node)
 
     cmds.delete(path_node)
     cmds.delete(locator)

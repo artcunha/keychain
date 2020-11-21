@@ -7,6 +7,7 @@ import math
 from keychain.api.drags import abstract_drag
 from keychain.api.utils import curves, camera
 from keychain.api.utils import maya_api as maya_api_utils
+from keychain.api.utils import keys as key_utils
 from keychain.api import timeline
 
 from keychain.tools.archer import constants
@@ -63,7 +64,9 @@ class DrawCurveContext(abstract_drag.AbstractContextDragger):
                     cmds.setKeyframe(node, attribute="rotateX", value=math.degrees(rotation.x), time=self.stepped_frames[i])
                     cmds.setKeyframe(node, attribute="rotateY", value=math.degrees(rotation.y), time=self.stepped_frames[i])
                     cmds.setKeyframe(node, attribute="rotateZ", value=math.degrees(rotation.z), time=self.stepped_frames[i])
-                
+        
+            key_utils.apply_euler_filter(node)
+            
         self.delete_curve()
         # Go to the last frame
         self.timeline.current_frame = self.stepped_frames[-1]

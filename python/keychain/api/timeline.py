@@ -51,6 +51,10 @@ class Timeline(object):
         aTimeSlider = maya.mel.eval("$tmpVar=$gPlayBackSlider")
         return cmds.timeControl(aTimeSlider, q=True, rangeArray=True)
 
+    def get_selected_range(self):
+        return Timeline.get_timeslider_range() or self.frame_range
+    
+
     def _frame_to_time(self, frame):
         return om.MTime(frame, om.MTime.kFilm)
 

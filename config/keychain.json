@@ -2,7 +2,10 @@
     "UI":{
         "tools":[
             "archer",
-            "tracer"
+            "tracer",
+            "cam_follower",
+            "pinner",
+            "playblast"
         ]
     }
 }

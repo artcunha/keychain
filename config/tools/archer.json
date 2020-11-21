@@ -1,6 +1,6 @@
 
 { 
-    "icon":"tracer",
+    "icon":"archer.png",
     "settings":{
         "rotation":{
             "label":"Rotation",
