@@ -118,7 +118,7 @@ class DragSpinBox(QtWidgets.QWidget):
 
     def __init__(self, label=None, tooltip="", label_width=None, type="int", default=0, minimum=None, maximum=None,  parent=None, **kwargs):
         super(DragSpinBox, self).__init__(parent)
-
+        print label
         self.setToolTip(tooltip)
 
         layout = QtWidgets.QHBoxLayout()
@@ -141,7 +141,7 @@ class IntDragSpinBox(DragSpinBox):
 
     def __init__(self, label=None, tooltip="", label_width=None, default=0, minimum=None, maximum=None,  parent=None, **kwargs):
         kwargs.pop("type")
-        super(IntDragSpinBox, self).__init__(label=None, tooltip="", label_width=None, type=INT, default=0, minimum=None, maximum=None,  parent=None, **kwargs)
+        super(IntDragSpinBox, self).__init__(label=label, tooltip=tooltip, label_width=label_width, type=INT, default=default, minimum=minimum, maximum=maximum,  parent=parent, **kwargs)
         self.line.textChanged.connect(lambda value : self.value_signal.value_changed_signal.emit(int(value)))
 
 
@@ -151,5 +151,5 @@ class DoubleDragSpinBox(DragSpinBox):
 
     def __init__(self, label=None, tooltip="", label_width=None, default=0, minimum=None, maximum=None,  parent=None, **kwargs):
         kwargs.pop("type")
-        super(DoubleDragSpinBox, self).__init__(label=None, tooltip="", label_width=None, type=DOUBLE, default=0, minimum=None, maximum=None,  parent=None, **kwargs)
+        super(DoubleDragSpinBox, self).__init__(label=label, tooltip=tooltip, label_width=label_width, type=DOUBLE, default=default, minimum=minimum, maximum=maximum,  parent=parent, **kwargs)
         self.line.textChanged.connect(lambda value : self.value_signal.value_changed_signal.emit(float(value)))
