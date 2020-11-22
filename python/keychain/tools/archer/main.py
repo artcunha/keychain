@@ -26,6 +26,6 @@ class Controller(object):
         self.curve_draw_context.create()
 
 
-def launch():
+def launch(settings=None):
     controler = Controller()
     return controler.run()

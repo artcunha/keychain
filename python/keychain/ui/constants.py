@@ -1,8 +1,8 @@
 from keychain.ui.widgets.lib import dragSpinBox, checkBox, lineEdit, comboBox, fileLine, label
 
 MAPPING = {
-    "int" : dragSpinBox.DragSpinBox,
-    "double" : dragSpinBox.DragSpinBox,
+    "int" : dragSpinBox.IntDragSpinBox,
+    "double" : dragSpinBox.DoubleDragSpinBox,
     "bool" : checkBox.CheckBox,
     "str" : lineEdit.LineEdit,
     "list" : comboBox.ComboBox,

@@ -1,4 +1,9 @@
 from PySide2 import QtCore, QtGui, QtWidgets
+from keychain.ui.widgets import signals
+
+
+INT = "int"
+DOUBLE = "double"
 
 class DragLine(QtWidgets.QLineEdit):
     """
@@ -6,10 +11,7 @@ class DragLine(QtWidgets.QLineEdit):
     Source: https://stackoverflow.com/a/55685048
     """
 
-    INT = "int"
-    DOUBLE = "double"
-
-    def __init__(self, type="int", default=0, minimum=None, maximum=None, parent=None, **kwargs):
+    def __init__(self, type=INT, default=0, minimum=None, maximum=None, parent=None, **kwargs):
         super(DragLine, self).__init__(parent)
 
         self.setToolTip(
@@ -17,7 +19,7 @@ class DragLine(QtWidgets.QLineEdit):
             "(Hold CTRL or SHIFT change rate)"
         )
 
-        if type == DragLine.INT:
+        if type == INT:
             self.setValidator(QtGui.QIntValidator(parent=self))
         else:
             self.setValidator(QtGui.QDoubleValidator(parent=self))
@@ -88,13 +90,13 @@ class DragLine(QtWidgets.QLineEdit):
         return steps_mult
 
     def set_steps(self, steps):
-        if self.type == DragLine.INT:
+        if self.type == INT:
             self.steps = max(steps, 1)
         else:
             self.steps = steps
 
     def value(self):
-        if self.type == DragLine.INT:
+        if self.type == INT:
             return int(self.text())
         else:
             return float(self.text())
@@ -106,15 +108,13 @@ class DragLine(QtWidgets.QLineEdit):
         if self.maximum is not None:
             value = min(value, self.maximum)
 
-        if self.type == DragLine.INT:
+        if self.type == INT:
             self.setText(str(int(value)))
         else:
             self.setText(str(float(value)))
 
 
 class DragSpinBox(QtWidgets.QWidget):
-
-    value_changed_signal = QtCore.Signal()
 
     def __init__(self, label=None, tooltip="", label_width=None, type="int", default=0, minimum=None, maximum=None,  parent=None, **kwargs):
         super(DragSpinBox, self).__init__(parent)
@@ -124,7 +124,6 @@ class DragSpinBox(QtWidgets.QWidget):
         layout = QtWidgets.QHBoxLayout()
         self.setLayout(layout)
         self.line = DragLine(type=type, default=default, minimum=minimum, maximum=maximum, parent=parent, **kwargs)
-        self.line.textChanged.connect(lambda value : self.value_changed_signal.emit(int(value)))
 
 
         label_widget = QtWidgets.QLabel(label)
@@ -134,3 +133,23 @@ class DragSpinBox(QtWidgets.QWidget):
 
         layout.addWidget(label_widget)
         layout.addWidget(self.line)
+
+
+class IntDragSpinBox(DragSpinBox):
+
+    value_signal = signals.IntSignal()
+
+    def __init__(self, label=None, tooltip="", label_width=None, default=0, minimum=None, maximum=None,  parent=None, **kwargs):
+        kwargs.pop("type")
+        super(IntDragSpinBox, self).__init__(label=None, tooltip="", label_width=None, type=INT, default=0, minimum=None, maximum=None,  parent=None, **kwargs)
+        self.line.textChanged.connect(lambda value : self.value_signal.value_changed_signal.emit(int(value)))
+
+
+class DoubleDragSpinBox(DragSpinBox):
+
+    value_signal = signals.FloatSignal()
+
+    def __init__(self, label=None, tooltip="", label_width=None, default=0, minimum=None, maximum=None,  parent=None, **kwargs):
+        kwargs.pop("type")
+        super(DoubleDragSpinBox, self).__init__(label=None, tooltip="", label_width=None, type=DOUBLE, default=0, minimum=None, maximum=None,  parent=None, **kwargs)
+        self.line.textChanged.connect(lambda value : self.value_signal.value_changed_signal.emit(float(value)))

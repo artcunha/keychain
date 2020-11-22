@@ -1,7 +1,8 @@
 from PySide2 import QtCore, QtWidgets
+from keychain.ui.widgets import signals
 
 class LineEdit(QtWidgets.QWidget):
-    value_changed_signal = QtCore.Signal()
+    value_signal = signals.StrSignal()
 
     def __init__(self, label, default_text="", tooltip="", label_width=None, parent=None, **kwargs):
         super(LineEdit, self).__init__(parent)
@@ -11,7 +12,7 @@ class LineEdit(QtWidgets.QWidget):
         layout = QtWidgets.QHBoxLayout()
         self.setLayout(layout)
         self.line = QtWidgets.QLineEdit(default_text)
-        self.line.textChanged.connect(self.value_changed_signal.emit)
+        self.line.textChanged.connect(self.value_signal.value_changed_signal.emit)
 
         label = QtWidgets.QLabel(label)
         # label.setAlignment(QtCore.Qt.AlignRight)

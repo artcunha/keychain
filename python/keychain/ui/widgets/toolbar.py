@@ -10,6 +10,8 @@ from keychain.ui.widgets import settings_menu
 
 NAME = "Keychain Toolbar"
 TOOL_PATH = "keychain.tools.{tool}.main"
+
+
 class Toolbar(MayaQWidgetDockableMixin,QtWidgets.QWidget):
     def __init__(self, parent=maya_qt.get_maya_window()):
         super(Toolbar, self).__init__(parent)
@@ -29,6 +31,7 @@ class Toolbar(MayaQWidgetDockableMixin,QtWidgets.QWidget):
         
         self.tools_settings ={}
         self.tools_icons = {}
+        self.tools_menus = {}
         for tool in self.tools_list:
             config_dict = config_api.get_config(tool)
             if not config_dict or not config_dict.get("settings"):
@@ -44,12 +47,9 @@ class Toolbar(MayaQWidgetDockableMixin,QtWidgets.QWidget):
         button = QtWidgets.QToolButton(parent=self)
         button.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
         self.layout().addWidget(button)
-        print button.geometry()
-
 
         # Connect command slot
-        button.clicked.connect(getattr(importlib.import_module(TOOL_PATH.format(tool=tool)), "launch"))
-
+        button.clicked.connect(lambda : self._on_tool_button_clicked(tool))
         # Aesthetics
         button.setFixedSize(60,60)
         button.setText(tool)
@@ -58,6 +58,7 @@ class Toolbar(MayaQWidgetDockableMixin,QtWidgets.QWidget):
         if path_to_icon:
             icon = QtGui.QIcon(path_to_icon)
             button.setIcon(icon)
+            # button.filename = path_to_icon
             button.setIconSize(QtCore.QSize(40,40))
     
         # Set right click settings widget
@@ -66,13 +67,32 @@ class Toolbar(MayaQWidgetDockableMixin,QtWidgets.QWidget):
         if not tool_sting:
             return
         menu = settings_menu.SettingsMenu(tool_sting, parent=button)
+        self.tools_menus[tool] = menu
         button.customContextMenuRequested.connect(lambda point: self._on_context_menu(menu))
+
+    def _on_tool_button_clicked(self, tool):
+        settings_menu = self.tools_menus.get(tool)
+        if settings_menu:
+            settings = settings_menu.settings
+        importlib.import_module(TOOL_PATH.format(tool=tool)).launch(settings=settings)
+
 
     def _on_context_menu(self, menu):
         # Qt will only have the geometry information once the widget is visible
         # This means we have to separate this into a separate method
-        menu.move(menu.parent().mapToGlobal(QtCore.QPoint(40, 0))) 
+        
+        # filename = menu.parent().filename
+        # pixmap = QtGui.QPixmap(filename)
+        # mask = pixmap.createMaskFromColor(QtGui.QColor('transparent'), QtCore.Qt.MaskInColor)
+        # pixmap.fill((QtGui.QColor('darkGray')))
+        # pixmap.setMask(mask)
+        
+        # icon = QtGui.QIcon(pixmap)
+        # menu.parent().setIcon(icon)
+
+        menu.move(menu.parent().mapToGlobal(QtCore.QPoint(60, 0))) 
         menu.show()
+
 
 @maya_qt.ensure_single_widget(NAME)
 def launch():

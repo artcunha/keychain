@@ -1,8 +1,9 @@
 
 from PySide2 import QtCore, QtWidgets, QtGui
+from keychain.ui.widgets import signals
 
 class FileLine(QtWidgets.QWidget):
-    value_changed_signal = QtCore.Signal()
+    value_signal = signals.StrSignal()
 
     def __init__(self, parent=None, **kwargs):
         super(FileLine, self).__init__(parent)
@@ -32,7 +33,7 @@ class FileLine(QtWidgets.QWidget):
         self.apply()
 
     def apply(self):
-        self.value_changed_signal.emit(self.text_line.text())
+        self.value_signal.value_changed_signal.emit(self.text_line.text())
 
     def value(self):
         value = self.text_line.text()
@@ -42,8 +43,7 @@ class FileLine(QtWidgets.QWidget):
         self.text_line.setText(value)
 
 class FolderLine(FileLine):
-    value_changed_signal = QtCore.Signal(str)
-
+    
     def __init__(self, parent=None, **kwargs):
         super(FolderLine, self).__init__(parent)
 
